@@ -7,10 +7,12 @@ const setup = async () => {
     // const pokemons = result.data.results;
 
     //slice me the first 3 pokemons
-    const pokemons = result.data.results.slice(0, 3);
+    const pokemons = result.data.results.slice(0, 10);
 
-    pokemons.forEach(async (pokemon, index) => {
-
+    for (let i = 0; i < pokemons.length; i++) {
+        // pokemons.forEach(async (pokemon, index) => {
+        pokemon = pokemons[i]
+        index = i
         const pokemonResult = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
         $("#main").append(`
         <div class="card shadow-lg p-3 mb-5" style="width: 18rem;">
@@ -19,8 +21,6 @@ const setup = async () => {
         <div class="card-body">
         <h5 class="card-title">${pokemon.name}</h5>
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal${pokemon.name}">
             Launch demo modal
@@ -52,7 +52,8 @@ const setup = async () => {
         </div>
     </div>
     `)
-    })
+    }
+    
 }
 
 
