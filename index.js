@@ -21,6 +21,7 @@ const setup = async () => {
         }
     };
 
+
     const updateDisplayedPokemons = async () => {
         $("#main").empty();
 
@@ -65,7 +66,12 @@ const setup = async () => {
                     </div>
                 </div>
             `);
+            $("#displayedPokemons").text(`${startingIndex + i + 1}`);
         }
+    };
+
+    const updatePokemonCounts = () => {
+        $("#totalPokemons").text(`${pokemons.length}`);
     };
 
     const toggleNextPreviousButtons = () => {
@@ -117,6 +123,7 @@ const setup = async () => {
     updatePaginationButtons();
     updateDisplayedPokemons();
     toggleNextPreviousButtons();
+    updatePokemonCounts();
 };
 
 $(document).ready(setup);
