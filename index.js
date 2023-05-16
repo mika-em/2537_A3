@@ -1,40 +1,40 @@
 const setup = async () => {
-            const result = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=810");
+    const result = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=810");
 
-            const pokemons = result.data.results;
-            const page_size = 10;
-            const buttons = Math.ceil(pokemons.length / page_size);
+    const pokemons = result.data.results;
+    const page_size = 10;
+    const buttons = Math.ceil(pokemons.length / page_size);
 
-            let currentPage = 1;
+    let currentPage = 1;
 
-            const updatePaginationButtons = () => {
-                $("#paginationControls").empty();
+    const updatePaginationButtons = () => {
+        $("#paginationControls").empty();
 
-                const startIndex = Math.max(currentPage - 1, 1);
-                const endIndex = Math.min(startIndex + 4, buttons);
+        const startIndex = Math.max(currentPage - 1, 1);
+        const endIndex = Math.min(startIndex + 4, buttons);
 
-                for (let i = startIndex; i <= endIndex; i++) {
-                    const buttonClass = i === currentPage ? "btn-primary active" : "btn-primary";
-                    $("#paginationControls").append(
-                        `<button type="button" class="btn ${buttonClass}">${i}</button>`
-                    );
-                }
-            };
+        for (let i = startIndex; i <= endIndex; i++) {
+            const buttonClass = i === currentPage ? "btn-primary active" : "btn-primary";
+            $("#paginationControls").append(
+                `<button type="button" class="btn ${buttonClass}">${i}</button>`
+            );
+        }
+    };
 
-            const updateDisplayedPokemons = async () => {
-                $("#main").empty();
+    const updateDisplayedPokemons = async () => {
+        $("#main").empty();
 
-                const startingIndex = (currentPage - 1) * page_size;
-                const endIndex = startingIndex + page_size;
-                const sliced_pokemons = pokemons.slice(startingIndex, endIndex);
+        const startingIndex = (currentPage - 1) * page_size;
+        const endIndex = startingIndex + page_size;
+        const sliced_pokemons = pokemons.slice(startingIndex, endIndex);
 
-                for (let i = 0; i < sliced_pokemons.length; i++) {
-                    const pokemon = sliced_pokemons[i];
-                    const index = startingIndex + i;
-                    const pokemonResult = await axios.get(
-                        `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
-                    );
-                    $("#main").append(`
+        for (let i = 0; i < sliced_pokemons.length; i++) {
+            const pokemon = sliced_pokemons[i];
+            const index = startingIndex + i;
+            const pokemonResult = await axios.get(
+                `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
+            );
+            $("#main").append(`
                 <div class="card shadow-lg p-3 mb-5" style="width: 18rem;">
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${index + 1}.png" class="card-img-top" alt="...">
                     <div class="card-body">
@@ -65,37 +65,58 @@ const setup = async () => {
                     </div>
                 </div>
             `);
-                }
-            };
+        }
+    };
 
-            const goToNextPage = () => {
-                if (currentPage < buttons) {
-                    currentPage++;
-                    updatePaginationButtons();
-                    updateDisplayedPokemons();
-                }
-            };
+    const toggleNextPreviousButtons = () => {
+        const previousButton = $("#previousButton");
+        const nextButton = $("#nextButton");
 
-            const goToPreviousPage = () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    updatePaginationButtons();
-                    updateDisplayedPokemons();
-                }
-            };
+        if (currentPage === 1) {
+            previousButton.hide();
+        } else {
+            previousButton.show();
+        }
 
-            $("#paginationControls").on("click", "button", function () {
-                currentPage = parseInt($(this).text());
-                updatePaginationButtons();
-                updateDisplayedPokemons();
-            });
+        if (currentPage === buttons) {
+            nextButton.hide();
+        } else {
+            nextButton.show();
+        }
+    };
 
-            $("#previousButton").click(goToPreviousPage);
 
-            $("#nextButton").click(goToNextPage);
-
+    const goToNextPage = () => {
+        if (currentPage < buttons) {
+            currentPage++;
             updatePaginationButtons();
             updateDisplayedPokemons();
-        };
+        }
+        toggleNextPreviousButtons();
+    };
 
-        setup();
+    const goToPreviousPage = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            updatePaginationButtons();
+            updateDisplayedPokemons();
+        }
+        toggleNextPreviousButtons();
+    };
+
+    $("#paginationControls").on("click", "button", function () {
+        currentPage = parseInt($(this).text());
+        updatePaginationButtons();
+        updateDisplayedPokemons();
+        toggleNextPreviousButtons();
+    });
+
+    $("#nextButton").on("click", goToNextPage);
+    $("#previousButton").on("click", goToPreviousPage);
+
+    updatePaginationButtons();
+    updateDisplayedPokemons();
+    toggleNextPreviousButtons();
+};
+
+$(document).ready(setup);
