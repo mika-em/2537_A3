@@ -9,3 +9,16 @@
     margin-top: 50px;
     margin-bottom: 50px;
 }
+
+#typeContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 150px;
+    margin-left: 100px;
+    margin-right: 100px;
+    text-size-adjust: 100%;
+
+}
