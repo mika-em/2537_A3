@@ -14,8 +14,9 @@ const setup = async () => {
                 const endIndex = Math.min(startIndex + 4, buttons);
 
                 for (let i = startIndex; i <= endIndex; i++) {
+                    const buttonClass = i === currentPage ? "btn-primary active" : "btn-primary";
                     $("#paginationControls").append(
-                        `<button type="button" class="btn btn-primary">${i}</button>`
+                        `<button type="button" class="btn ${buttonClass}">${i}</button>`
                     );
                 }
             };
